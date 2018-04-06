@@ -178,8 +178,8 @@ class HistoryEntry(models.Model):
                 value = [resolve_value("users", x) for x in self.diff[key]]
             elif key == "assigned_users":
                 diff_in, diff_out = self.diff[key]
-                value_in = ""
-                value_out = ""
+                value_in = None
+                value_out = None
                 if diff_in:
                     value_in = ", ".join([resolve_value("users", x) for x in diff_in])
                 if diff_out:
