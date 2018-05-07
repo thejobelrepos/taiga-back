@@ -180,10 +180,11 @@ class HistoryEntry(models.Model):
                 diff_in, diff_out = self.diff[key]
                 value_in = None
                 value_out = None
+
                 if diff_in:
-                    value_in = ", ".join([resolve_value("users", x) for x in diff_in])
+                    value_in = ", ".join([resolve_value("users", x) for x in diff_in if x])
                 if diff_out:
-                    value_out = ", ".join([resolve_value("users", x) for x in diff_out])
+                    value_out = ", ".join([resolve_value("users", x) for x in diff_out if x])
                 value = [value_in, value_out]
             elif key == "points":
                 points = {}
