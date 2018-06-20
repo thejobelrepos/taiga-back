@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 3.3.8 (2018-06-14)
+
+### Misc
+
+- Minor bug fix.
+
+## 3.3.7 (2018-05-31)
+
+### Misc
+
+- Minor bug fix related with project import.
+
+- Pin requirements to solve incompatible versions detected by pip 10.
+
 ## 3.3.4 (2018-05-24)
 
 ### Misc
