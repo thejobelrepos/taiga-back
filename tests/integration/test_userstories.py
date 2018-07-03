@@ -716,6 +716,34 @@ def test_api_filter_by_assigned_users(client):
     assert number_of_userstories == 2
 
 
+def test_api_filter_by_role(client):
+    project = f.ProjectFactory.create()
+    role1 = f.RoleFactory.create()
+
+    user = f.UserFactory(is_superuser=True)
+    user2 = f.UserFactory(is_superuser=True)
+    f.MembershipFactory.create(user=user2, project=project, role=role1)
+
+    userstory = f.create_userstory(owner=user, subject="test 2 users",
+                                   assigned_to=user,
+                                   assigned_users=[user.id, user2.id],
+                                   project=project)
+    f.create_userstory(
+        owner=user, subject="test 1 user", assigned_to=user,
+        assigned_users=[user.id],
+        project=project
+    )
+
+    url = reverse("userstories-list") + "?role=%s" % (role1.id)
+
+    client.login(userstory.owner)
+    response = client.get(url)
+    number_of_userstories = len(response.data)
+
+    assert response.status_code == 200
+    assert number_of_userstories == 1
+
+
 @pytest.mark.parametrize("field_name", ["estimated_start", "estimated_finish"])
 def test_api_filter_by_milestone__estimated_start_and_end(client, field_name):
     user = f.UserFactory(is_superuser=True)
@@ -830,8 +858,8 @@ def test_api_filters_data(client):
     assert next(filter(lambda i: i['id'] == user2.id, response.data["assigned_to"]))["count"] == 2
     assert next(filter(lambda i: i['id'] == user3.id, response.data["assigned_to"]))["count"] == 1
 
-    assert next(filter(lambda i: i['id'] == user1.id, response.data["assigned_users"]))["count"] == 2
-    assert next(filter(lambda i: i['id'] == user2.id, response.data["assigned_users"]))["count"] == 0
+    assert next(filter(lambda i: i['id'] == user1.id, response.data["assigned_users"]))["count"] == 5
+    assert next(filter(lambda i: i['id'] == user2.id, response.data["assigned_users"]))["count"] == 2
 
     assert next(filter(lambda i: i['id'] == status0.id, response.data["statuses"]))["count"] == 3
     assert next(filter(lambda i: i['id'] == status1.id, response.data["statuses"]))["count"] == 2
@@ -1005,6 +1033,64 @@ def test_api_filters_data_with_assigned_users(client):
                        response.data["assigned_users"]))["count"] == 1
     assert next(filter(lambda i: i['id'] == user3.id,
                        response.data["assigned_users"]))["count"] == 1
+
+
+def test_api_filters_data_roles_with_assigned_users(client):
+    project = f.ProjectFactory.create()
+
+    role1 = f.RoleFactory.create(project=project)
+    role2 = f.RoleFactory.create(project=project)
+
+    user1 = f.UserFactory.create(is_superuser=True)
+    f.MembershipFactory.create(user=user1, project=project, role=role1)
+    user2 = f.UserFactory.create(is_superuser=True)
+    f.MembershipFactory.create(user=user2, project=project, role=role2)
+    user3 = f.UserFactory.create(is_superuser=True)
+    f.MembershipFactory.create(user=user3, project=project, role=role1)
+
+
+    # ----------------------------------------------------------------
+    # | US    |  Owner | Assigned To | Assigned Users | Role         |
+    # |-------#--------#-------------#----------------#---------------
+    # | 0     |  user2 | user2       | user2, user3   | role2, role1 |
+    # | 1     |  user1 | None        | None           | None         |
+    # | 2     |  user1 | user1       | user1          | role1        |
+    # ----------------------------------------------------------------
+
+    us0 = f.UserStoryFactory.create(project=project, owner=user2,
+                                    assigned_to=user2,
+                                    assigned_users=[user2, user3],)
+    f.RelatedUserStory.create(user_story=us0)
+    us1 = f.UserStoryFactory.create(project=project, owner=user1,
+                                    assigned_to=None)
+    us2 = f.UserStoryFactory.create(project=project, owner=user1,
+                                    assigned_to=user1,
+                                    assigned_users=[user1],)
+
+    url = reverse("userstories-filters-data") + "?project={}".format(project.id)
+
+    client.login(user1)
+
+    # No filter
+    response = client.get(url)
+    assert response.status_code == 200
+
+    assert next(filter(lambda i: i['id'] == user1.id, response.data["owners"]))["count"] == 2
+    assert next(filter(lambda i: i['id'] == user2.id, response.data["owners"]))["count"] == 1
+
+    assert next(filter(lambda i: i['id'] is None, response.data["assigned_to"]))["count"] == 1
+    assert next(filter(lambda i: i['id'] == user1.id, response.data["assigned_to"]))["count"] == 1
+    assert next(filter(lambda i: i['id'] == user2.id, response.data["assigned_to"]))["count"] == 1
+
+    assert next(filter(lambda i: i['id'] == user1.id,
+                       response.data["assigned_users"]))["count"] == 1
+    assert next(filter(lambda i: i['id'] == user2.id,
+                       response.data["assigned_users"]))["count"] == 1
+
+    assert next(filter(lambda i: i['id'] == role1.id,
+                       response.data["roles"]))["count"] == 2
+    assert next(filter(lambda i: i['id'] == role2.id,
+                       response.data["roles"]))["count"] == 1
 
 
 def test_get_invalid_csv(client):
