@@ -61,6 +61,7 @@ class IssueSerializer(IssueListSerializer):
     blocked_note_html = MethodField()
     description = Field()
     description_html = MethodField()
+    time_spent_note = Field()
 
     def get_comment(self, obj):
         # NOTE: This method and field is necessary to historical comments work
