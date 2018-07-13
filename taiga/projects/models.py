@@ -787,6 +787,7 @@ class ProjectTemplate(TaggedMixin, TagsColorsMixin, models.Model):
     us_custom_attributes = JSONField(null=True, blank=True, verbose_name=_("us custom attributes"))
     task_custom_attributes = JSONField(null=True, blank=True, verbose_name=_("task custom attributes"))
     issue_custom_attributes = JSONField(null=True, blank=True, verbose_name=_("issue custom attributes"))
+    enable_time_spent_features = models.BooleanField(default=False, null=False, blank=True, verbose_name=_("enable time spent features"))
 
     _importing = None
 
@@ -959,6 +960,7 @@ class ProjectTemplate(TaggedMixin, TagsColorsMixin, models.Model):
         self.tags_colors = project.tags_colors
         self.is_looking_for_people = project.is_looking_for_people
         self.looking_for_people_note = project.looking_for_people_note
+        self.enable_time_spent_features = project.enable_time_spent_features
 
     def apply_to_project(self, project):
         Role = apps.get_model("users", "Role")
@@ -975,6 +977,7 @@ class ProjectTemplate(TaggedMixin, TagsColorsMixin, models.Model):
         project.is_issues_activated = self.is_issues_activated
         project.videoconferences = self.videoconferences
         project.videoconferences_extra_data = self.videoconferences_extra_data
+        project.enable_time_spent_features = self.enable_time_spent_features
 
         for epic_status in self.epic_statuses:
             EpicStatus.objects.create(
