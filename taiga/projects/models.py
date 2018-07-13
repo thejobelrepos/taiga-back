@@ -170,6 +170,7 @@ class Project(ProjectDefaults, TaggedMixin, TagsColorsMixin, models.Model):
     total_story_points = models.FloatField(null=True, blank=True, verbose_name=_("total story points"))
     is_contact_activated = models.BooleanField(default=True, null=False, blank=True,
                                                verbose_name=_("active contact"))
+    enable_time_spent_features = models.BooleanField(default=False, null=False, blank=True, verbose_name=_("enable time spent features"))
     is_epics_activated = models.BooleanField(default=False, null=False, blank=True,
                                              verbose_name=_("active epics panel"))
     is_backlog_activated = models.BooleanField(default=True, null=False, blank=True,
