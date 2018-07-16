@@ -452,6 +452,7 @@ class IssueSerializer(CustomAttributesValuesWebhookSerializerMixin, serializers.
     type = IssueTypeSerializer()
     priority = PrioritySerializer()
     severity = SeveritySerializer()
+    time_spent_note = Field()
 
     def get_permalink(self, obj):
         return resolve_front_url("issue", obj.project.slug, obj.ref)

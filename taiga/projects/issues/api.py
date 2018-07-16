@@ -64,7 +64,8 @@ class IssueViewSet(OCCResourceMixin, VotedResourceMixin, HistoryResourceMixin, W
                        filters.ModifiedDateFilter,
                        filters.FinishedDateFilter,
                        filters.OrderByFilterMixin)
-    filter_fields = ("project",
+    filter_fields = ("milestone",
+                     "project",
                      "project__slug",
                      "status__is_closed")
     order_by_fields = ("type",
@@ -228,9 +229,12 @@ class IssueViewSet(OCCResourceMixin, VotedResourceMixin, HistoryResourceMixin, W
                 raise exc.Blocked(_("Blocked element"))
 
             issues = services.create_issues_in_bulk(
-                data["bulk_issues"], project=project, owner=request.user,
-                status=project.default_issue_status, severity=project.default_severity,
-                priority=project.default_priority, type=project.default_issue_type,
+                data["bulk_issues"], milestone_id=data["milestone_id"],
+                project=project, owner=request.user,
+                status=project.default_issue_status,
+                severity=project.default_severity,
+                priority=project.default_priority,
+                type=project.default_issue_type,
                 callback=self.post_save, precall=self.pre_save)
 
             issues = self.get_queryset().filter(id__in=[i.id for i in issues])

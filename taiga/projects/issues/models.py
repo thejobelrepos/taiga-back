@@ -65,6 +65,7 @@ class Issue(OCCModelMixin, WatchedModelMixin, BlockedMixin, TaggedMixin, DueDate
     attachments = GenericRelation("attachments.Attachment")
     external_reference = ArrayField(models.TextField(null=False, blank=False),
                                     null=True, blank=True, default=None, verbose_name=_("external reference"))
+    time_spent_note = models.IntegerField(null=False, default=0, verbose_name=_("time spent minutes"))
     _importing = None
 
     class Meta:

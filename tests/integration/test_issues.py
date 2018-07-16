@@ -710,3 +710,82 @@ def test_api_validator_assigned_to_when_create_issues(client):
 
         response = client.json.post(url, json.dumps(data))
         assert response.status_code == 400, response.data
+
+
+def test_create_issue_in_milestone(client):
+    user = f.UserFactory.create()
+    project = f.ProjectFactory.create(owner=user, default_task_status=None)
+    project.default_issue_status = f.IssueStatusFactory.create(project=project)
+    f.MembershipFactory.create(project=project, user=user, is_admin=True)
+    milestone = f.MilestoneFactory(project=project)
+    project.save()
+
+    url = reverse("issues-list")
+
+    data = {"subject": "Test issue with milestone", "project": project.id,
+            "milestone": milestone.id}
+    client.login(user)
+    response = client.json.post(url, json.dumps(data))
+    assert response.status_code == 201
+    assert response.data['status'] == project.default_issue_status.id
+    assert response.data['project'] == project.id
+    assert response.data['milestone'] == milestone.id
+
+
+def test_api_create_in_bulk_with_status_milestone(client):
+    user = f.UserFactory.create()
+    project = f.ProjectFactory.create(owner=user, default_task_status=None)
+    f.MembershipFactory.create(project=project, user=user, is_admin=True)
+
+    project.default_issue_status = f.IssueStatusFactory.create(project=project)
+    project.save()
+    milestone = f.MilestoneFactory(project=project)
+
+    url = reverse("issues-bulk-create")
+    data = {
+        "bulk_issues": "Issue #1\nIssue #2",
+        "project_id": project.id,
+        "milestone_id": milestone.id,
+        "status_id": project.default_issue_status.id
+    }
+
+    client.login(user)
+    response = client.json.post(url, json.dumps(data))
+
+    assert response.status_code == 200
+    assert response.data[0]["status"] == project.default_issue_status.id
+    assert response.data[0]["milestone"] == milestone.id
+
+
+def test_get_issues(client):
+    user = f.UserFactory.create()
+    project = f.ProjectFactory.create(owner=user)
+    f.MembershipFactory.create(project=project, user=user, is_admin=True)
+
+    f.IssueFactory.create(project=project)
+    url = reverse("issues-list")
+
+    client.login(project.owner)
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.data[0].get("milestone")
+
+
+def test_get_issues_in_milestone(client):
+    user = f.UserFactory.create()
+    project = f.ProjectFactory.create(owner=user)
+    f.MembershipFactory.create(project=project, user=user, is_admin=True)
+    project.save()
+    milestone = f.MilestoneFactory(project=project)
+    f.IssueFactory.create(project=project, milestone=milestone)
+    f.IssueFactory.create(project=project)
+    url = reverse("issues-list") + "?milestone={}".format(milestone.id)
+
+    client.login(project.owner)
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0].get("milestone") == milestone.id

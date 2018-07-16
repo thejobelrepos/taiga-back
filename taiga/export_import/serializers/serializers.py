@@ -351,6 +351,8 @@ class IssueExportSerializer(CustomAttributesValuesExportSerializerMixin,
     due_date = DateTimeField()
     due_date_reason = Field()
 
+    time_spent_note = Field()
+
     def get_votes(self, obj):
         return [x.email for x in votes_service.get_voters(obj)]
 
