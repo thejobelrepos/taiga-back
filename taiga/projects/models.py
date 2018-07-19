@@ -171,6 +171,8 @@ class Project(ProjectDefaults, TaggedMixin, TagsColorsMixin, models.Model):
     is_contact_activated = models.BooleanField(default=True, null=False, blank=True,
                                                verbose_name=_("active contact"))
     enable_time_spent_features = models.BooleanField(default=False, null=False, blank=True, verbose_name=_("enable time spent features"))
+    enable_jobel_integration_features = models.BooleanField(default=False, null=False, blank=True, verbose_name=_("enable JOBEL integration features"))
+
     is_epics_activated = models.BooleanField(default=False, null=False, blank=True,
                                              verbose_name=_("active epics panel"))
     is_backlog_activated = models.BooleanField(default=True, null=False, blank=True,
