@@ -53,6 +53,7 @@ class IssueListSerializer(VoteResourceSerializerMixin, WatchedResourceSerializer
     is_blocked = Field()
     blocked_note = Field()
     is_closed = Field()
+    time_spent_note = Field()
 
 
 class IssueSerializer(IssueListSerializer):
