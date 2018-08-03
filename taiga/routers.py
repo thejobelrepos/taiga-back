@@ -58,9 +58,12 @@ from taiga.projects.api import InvitationViewSet
 from taiga.projects.api import EpicStatusViewSet
 from taiga.projects.api import UserStoryStatusViewSet
 from taiga.projects.api import PointsViewSet
+from taiga.projects.api import UserStoryDueDateViewSet
 from taiga.projects.api import TaskStatusViewSet
+from taiga.projects.api import TaskDueDateViewSet
 from taiga.projects.api import IssueStatusViewSet
 from taiga.projects.api import IssueTypeViewSet
+from taiga.projects.api import IssueDueDateViewSet
 from taiga.projects.api import PriorityViewSet
 from taiga.projects.api import SeverityViewSet
 from taiga.projects.api import ProjectTemplateViewSet
@@ -74,9 +77,12 @@ router.register(r"invitations", InvitationViewSet, base_name="invitations")
 router.register(r"epic-statuses", EpicStatusViewSet, base_name="epic-statuses")
 router.register(r"userstory-statuses", UserStoryStatusViewSet, base_name="userstory-statuses")
 router.register(r"points", PointsViewSet, base_name="points")
+router.register(r"userstory-due-dates", UserStoryDueDateViewSet, base_name="userstory-due-dates")
 router.register(r"task-statuses", TaskStatusViewSet, base_name="task-statuses")
+router.register(r"task-due-dates", TaskDueDateViewSet, base_name="task-due-dates")
 router.register(r"issue-statuses", IssueStatusViewSet, base_name="issue-statuses")
 router.register(r"issue-types", IssueTypeViewSet, base_name="issue-types")
+router.register(r"issue-due-dates", IssueDueDateViewSet, base_name="issue-due-dates")
 router.register(r"priorities", PriorityViewSet, base_name="priorities")
 router.register(r"severities",SeverityViewSet , base_name="severities")
 

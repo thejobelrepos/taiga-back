@@ -59,10 +59,13 @@ class ProjectTemplateFactory(Factory):
 
     epic_statuses = []
     us_statuses = []
+    us_duedates = []
     points = []
     task_statuses = []
+    task_duedates = []
     issue_statuses = []
     issue_types = []
+    issue_duedates = []
     priorities = []
     severities = []
     roles = []
@@ -382,6 +385,15 @@ class UserStoryStatusFactory(Factory):
         strategy = factory.CREATE_STRATEGY
 
     name = factory.Sequence(lambda n: "User Story status {}".format(n))
+    project = factory.SubFactory("tests.factories.ProjectFactory")
+
+
+class UserStoryDueDateFactory(Factory):
+    class Meta:
+        model = "projects.UserStoryDueDate"
+        strategy = factory.CREATE_STRATEGY
+
+    name = factory.Sequence(lambda n: "User Story due date {}".format(n))
     project = factory.SubFactory("tests.factories.ProjectFactory")
 
 

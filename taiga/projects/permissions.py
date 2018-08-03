@@ -145,6 +145,16 @@ class UserStoryStatusPermission(TaigaResourcePermission):
     bulk_update_order_perms = IsProjectAdmin()
 
 
+class UserStoryDueDatePermission(TaigaResourcePermission):
+    retrieve_perms = HasProjectPerm('view_project')
+    create_perms = IsProjectAdmin()
+    update_perms = IsProjectAdmin()
+    partial_update_perms = IsProjectAdmin()
+    destroy_perms = IsProjectAdmin()
+    list_perms = AllowAny()
+    bulk_update_order_perms = IsProjectAdmin()
+
+
 # Tasks
 
 class TaskStatusPermission(TaigaResourcePermission):
@@ -156,6 +166,15 @@ class TaskStatusPermission(TaigaResourcePermission):
     list_perms = AllowAny()
     bulk_update_order_perms = IsProjectAdmin()
 
+
+class TaskDueDatePermission(TaigaResourcePermission):
+    retrieve_perms = HasProjectPerm('view_project')
+    create_perms = IsProjectAdmin()
+    update_perms = IsProjectAdmin()
+    partial_update_perms = IsProjectAdmin()
+    destroy_perms = IsProjectAdmin()
+    list_perms = AllowAny()
+    bulk_update_order_perms = IsProjectAdmin()
 
 # Issues
 
@@ -190,6 +209,16 @@ class IssueStatusPermission(TaigaResourcePermission):
 
 
 class IssueTypePermission(TaigaResourcePermission):
+    retrieve_perms = HasProjectPerm('view_project')
+    create_perms = IsProjectAdmin()
+    update_perms = IsProjectAdmin()
+    partial_update_perms = IsProjectAdmin()
+    destroy_perms = IsProjectAdmin()
+    list_perms = AllowAny()
+    bulk_update_order_perms = IsProjectAdmin()
+
+
+class IssueDueDatePermission(TaigaResourcePermission):
     retrieve_perms = HasProjectPerm('view_project')
     create_perms = IsProjectAdmin()
     update_perms = IsProjectAdmin()

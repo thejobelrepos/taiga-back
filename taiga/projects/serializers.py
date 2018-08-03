@@ -37,6 +37,16 @@ from .notifications.choices import NotifyLevel
 # Custom values for selectors
 ######################################################
 
+class BaseDueDateSerializer(serializers.LightSerializer):
+    id = Field()
+    name = I18NField()
+    order = Field()
+    by_default = Field()
+    days_to_due = Field()
+    color = Field()
+    project = Field(attr="project_id")
+
+
 class EpicStatusSerializer(serializers.LightSerializer):
     id = Field()
     name = I18NField()
@@ -67,6 +77,10 @@ class PointsSerializer(serializers.LightSerializer):
     project = Field(attr="project_id")
 
 
+class UserStoryDueDateSerializer(BaseDueDateSerializer):
+    pass
+
+
 class TaskStatusSerializer(serializers.LightSerializer):
     id = Field()
     name = I18NField()
@@ -75,6 +89,10 @@ class TaskStatusSerializer(serializers.LightSerializer):
     is_closed = Field()
     color = Field()
     project = Field(attr="project_id")
+
+
+class TaskDueDateSerializer(BaseDueDateSerializer):
+    pass
 
 
 class SeveritySerializer(serializers.LightSerializer):
@@ -109,6 +127,10 @@ class IssueTypeSerializer(serializers.LightSerializer):
     order = Field()
     color = Field()
     project = Field(attr="project_id")
+
+
+class IssueDueDateSerializer(BaseDueDateSerializer):
+    pass
 
 
 ######################################################
@@ -358,10 +380,13 @@ class ProjectSerializer(serializers.LightSerializer):
 class ProjectDetailSerializer(ProjectSerializer):
     epic_statuses = Field(attr="epic_statuses_attr")
     us_statuses = Field(attr="userstory_statuses_attr")
+    us_duedates = Field(attr="userstory_duedates_attr")
     points = Field(attr="points_attr")
     task_statuses = Field(attr="task_statuses_attr")
+    task_duedates = Field(attr="task_duedates_attr")
     issue_statuses = Field(attr="issue_statuses_attr")
     issue_types = Field(attr="issue_types_attr")
+    issue_duedates = Field(attr="issue_duedates_attr")
     priorities = Field(attr="priorities_attr")
     severities = Field(attr="severities_attr")
     epic_custom_attributes = Field(attr="epic_custom_attributes_attr")
@@ -392,10 +417,15 @@ class ProjectDetailSerializer(ProjectSerializer):
 
     def to_value(self, instance):
         # Name attributes must be translated
-        for attr in ["epic_statuses_attr", "userstory_statuses_attr", "points_attr", "task_statuses_attr",
-                     "issue_statuses_attr", "issue_types_attr", "priorities_attr", "severities_attr",
-                     "epic_custom_attributes_attr", "userstory_custom_attributes_attr",
-                     "task_custom_attributes_attr", "issue_custom_attributes_attr", "roles_attr"]:
+        for attr in ["epic_statuses_attr", "userstory_statuses_attr",
+                     "userstory_duedates_attr", "points_attr",
+                     "task_statuses_attr", "task_duedates_attr",
+                     "issue_statuses_attr", "issue_types_attr",
+                     "issue_duedates_attr", "priorities_attr",
+                     "severities_attr", "epic_custom_attributes_attr",
+                     "userstory_custom_attributes_attr",
+                     "task_custom_attributes_attr",
+                     "issue_custom_attributes_attr", "roles_attr"]:
 
             assert hasattr(instance, attr), "instance must have a {} attribute".format(attr)
             val = getattr(instance, attr)
