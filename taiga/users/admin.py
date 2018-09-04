@@ -24,7 +24,7 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Role, User
+from .models import Role, User, Customer
 from .forms import UserChangeForm, UserCreationForm
 
 
