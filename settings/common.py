@@ -407,6 +407,7 @@ LOGGING = {
 
 
 AUTH_USER_MODEL = "users.User"
+AUTH_CUSTOMER_MODEL = "users.Customer"
 FORMAT_MODULE_PATH = "taiga.base.formats"
 
 DATE_INPUT_FORMATS = (
