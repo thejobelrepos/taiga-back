@@ -92,6 +92,32 @@ class UserSerializer(serializers.LightSerializer):
 
 
 ########################################################################
+# Customer
+########################################################################
+
+class CustomerSerializer(serializers.LightSerializer):
+    id = Field(attr="pk")
+    full_name = MethodField()
+    phone = MethodField()
+    email = MethodField()
+
+    def get_full_name(self, obj):
+        return obj.get_full_name()
+
+    def get_phone_number(self, obj):
+        return obj.get_phone_number()
+    
+    def get_email(self, obj):
+        return obj.get_email()
+
+    def to_value(self, instance):
+        if instance is None:
+            return None
+
+        return super().to_value(instance)
+
+
+########################################################################
 # Project
 ########################################################################
 
@@ -453,6 +479,7 @@ class IssueSerializer(CustomAttributesValuesWebhookSerializerMixin, serializers.
     priority = PrioritySerializer()
     severity = SeveritySerializer()
     time_spent_note = Field()
+    affects_customer = Field()
 
     def get_permalink(self, obj):
         return resolve_front_url("issue", obj.project.slug, obj.ref)

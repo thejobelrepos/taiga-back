@@ -55,6 +55,7 @@ class IssueListSerializer(VoteResourceSerializerMixin, WatchedResourceSerializer
     blocked_note = Field()
     is_closed = Field()
     time_spent_note = Field()
+    affects_customer = Field()
 
 
 class IssueSerializer(IssueListSerializer):
@@ -64,6 +65,7 @@ class IssueSerializer(IssueListSerializer):
     description = Field()
     description_html = MethodField()
     time_spent_note = Field()
+    affects_customer = Field()
 
     def get_comment(self, obj):
         # NOTE: This method and field is necessary to historical comments work
