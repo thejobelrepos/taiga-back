@@ -140,4 +140,4 @@ class UserAdmin(DjangoUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Customer, UserAdmin)
+admin.site.register(Customer)
