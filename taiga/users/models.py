@@ -359,3 +359,8 @@ def role_post_save(sender, instance, created, **kwargs):
         return
 
     instance.project.update_role_points()
+
+class Customer(models.Model):
+    full_name = models.CharField(_("full name"), max_length=256, blank=True)
+    phone = models.CharField(_("phone number"), max_length=18, blank=True, default="+ 1 (234) 567-8900")
+    email = models.EmailField(_("email address"), max_length=255, blank=True, unique=True)
