@@ -104,8 +104,8 @@ class CustomerSerializer(serializers.LightSerializer):
     def get_full_name(self, obj):
         return obj.get_full_name()
 
-    def get_phone_number(self, obj):
-        return obj.get_phone_number()
+    def get_phone(self, obj):
+        return obj.get_phone()
     
     def get_email(self, obj):
         return obj.get_email()
